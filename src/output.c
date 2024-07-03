@@ -20,7 +20,7 @@ void gameRefreshScreen()
     abAppend(&ab, "\x1b[H", 3);
 
     updateEntity();
-    gameDrawBox(&ab);
+    gameDraw(&ab);
     
 
     //char buf[32];
@@ -37,10 +37,11 @@ void gameRefreshScreen()
     abFree(&ab);
 }
 
-void gameDrawBox(struct abuf *ab)
+void gameDraw(struct abuf *ab)
 {
     int snakePosX = game.snake.posX + 1;
     int snakePosY = game.snake.posY + 1;
+
     for (int row = 0; row < game.screenRows - 1; row++)
     {
         if (row == 0 || row == game.screenRows - 2)
@@ -57,7 +58,6 @@ void gameDrawBox(struct abuf *ab)
 
             for (int col = 0; col < game.screenCols-3; col++) 
             {
-                // if there is a coordinate at that col and row val, print a &
                 if (findSnakeBody(row, col, snakeHead))
                 {
                     abAppend(ab, "@", 1);
@@ -78,6 +78,7 @@ void gameDrawBox(struct abuf *ab)
         buf, sizeof(buf), "GSX: %3d SPX: %3d, GSY: %3d, SPY: %3d, COLS: %3d, ROWS: %3d",
         game.snake.posX, snakePosX, game.snake.posY, snakePosY, game.screenCols, game.screenRows
     );
+    
     abAppend(ab, buf, buflen);
     abAppend(ab, "\x1b[K", 3); 
 }

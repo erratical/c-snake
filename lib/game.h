@@ -37,7 +37,7 @@ entity* createSegment(int posX, int posY);
 void linkSegment(entity** head, int posX, int posY);
 void init();
 void updateEntity();
-void updateNextSegment(entity** segment, int posX, int posY);
+void updateNextSegment(entity* segment, int posX, int posY);
 int findSnakeBody(int row, int col, entity *head);
 void freeSnake(entity* head);
 

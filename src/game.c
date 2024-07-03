@@ -46,19 +46,19 @@ void updateEntity()
             break;
     }
 
-    updateNextSegment(&snakeHead, prevPosX, prevPosY);
+    updateNextSegment(snakeHead, prevPosX, prevPosY);
 }
 
-void updateNextSegment(entity **segment, int posX, int posY)
+void updateNextSegment(entity *segment, int posX, int posY)
 {
-    if ((*segment)->nextSegment == NULL) return;
-    int prevPosX = (*segment)->nextSegment->posX;
-    int prevPosY = (*segment)->nextSegment->posY;
+    if (segment->nextSegment == NULL) return;
+    int prevPosX = segment->nextSegment->posX;
+    int prevPosY = segment->nextSegment->posY;
 
-    (*segment)->nextSegment->posX = posX;
-    (*segment)->nextSegment->posY = posY;
+    segment->nextSegment->posX = posX;
+    segment->nextSegment->posY = posY;
 
-    updateNextSegment(&(*segment)->nextSegment, prevPosX, prevPosY);
+    updateNextSegment(segment->nextSegment, prevPosX, prevPosY);
 }
 
 entity* createSegment(int posX, int posY)

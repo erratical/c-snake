@@ -5,7 +5,7 @@
 #include "../lib/game.h"
 
 void gameRefreshScreen();
-void gameDrawBox(struct abuf *ab);
-int findSnakeBody(int row, int col, entity *head);
+void gameDraw(struct abuf *ab);
+
 
 #endif 
