@@ -16,10 +16,10 @@ void init()
 
     if (getWindowSize(&game.screenRows, &game.screenCols) == -1) die("getWindowSize");
 
-    for (int i = 0; i < 5; i++)
-    {
-        linkSegment(&snakeHead, 0, 0);
-    }
+    //for (int i = 0; i < 5; i++)
+    //{
+    //    linkSegment(&snakeHead);
+    //}
 
 }
 
@@ -62,6 +62,7 @@ void updateEntities()
     if (game.snake.posX + 1 == game.spawnedBerry.posX && game.snake.posY + 1 == game.spawnedBerry.posY)
     {
         game.spawnedBerry.exists = 0;
+        linkSegment(&snakeHead);
     }
 }
 
@@ -77,22 +78,22 @@ void updateNextSegment(Entity *segment, int posX, int posY)
     updateNextSegment(segment->nextSegment, prevPosX, prevPosY);
 }
 
-Entity* createSegment(int posX, int posY)
+Entity* createSegment()
 {
     Entity *newSegment = (Entity*) malloc(sizeof(Entity));
-    newSegment->posX = posX;
-    newSegment->posY = posY;
     newSegment->nextSegment = NULL;
 
     return newSegment;
 }
-void linkSegment(Entity** head, int posX, int posY)
+void linkSegment(Entity** head)
 {
-    Entity *newSegment = createSegment(posX, posY);
+    Entity *newSegment = createSegment();
     
     if (*head == NULL)
     {
         *head = newSegment;
+        newSegment->posX = 0;
+        newSegment->posY = 0;
     }
     else 
     {
@@ -103,6 +104,8 @@ void linkSegment(Entity** head, int posX, int posY)
         }
 
         temp->nextSegment = newSegment;
+        newSegment->posX = temp->posX;
+        newSegment->posY = temp->posY;
     }
 }
 
@@ -132,7 +135,7 @@ void freeSnake(Entity *head)
 
 void generateBerry(int *posX, int *posY)
 {
-    int lowerLimit = 0;
+    int lowerLimit = 1;
     int upperLimitX = game.screenCols - 6;
     int upperLimitY = game.screenRows - 4;
 

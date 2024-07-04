@@ -42,8 +42,8 @@ struct gameConfig
 struct gameConfig game;
 Entity *snakeHead;
 
-Entity* createSegment(int posX, int posY);
-void linkSegment(Entity** head, int posX, int posY);
+Entity* createSegment();
+void linkSegment(Entity** head);
 void init();
 void updateEntities();
 void updateNextSegment(Entity* segment, int posX, int posY);

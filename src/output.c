@@ -64,7 +64,7 @@ void gameDraw(struct abuf *ab)
                 }
                 else if (findSnakeBody(row, col, snakeHead))
                 {
-                    abAppend(ab, "@", 1);
+                    abAppend(ab, "\x1b[1;32m@\x1b[m", 11);
                 }
                 else abAppend(ab, " ", 1);
             }
@@ -83,6 +83,7 @@ void gameDraw(struct abuf *ab)
         game.snake.posX, snakePosX, game.snake.posY, snakePosY, game.spawnedBerry.posX, game.spawnedBerry.posY
     );
     
+    if (buflen > game.screenCols) buflen = game.screenCols;
     abAppend(ab, buf, buflen);
     abAppend(ab, "\x1b[K", 3); 
 }
