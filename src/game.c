@@ -10,6 +10,7 @@ void init()
     game.snake.posX = 10;
     game.snake.posY = 0;
     game.snake.direction = NON;
+    game.snake.body = '@';
     game.spawnedBerry.exists = 0;
     game.spawnedBerry.posX = 0;
     game.spawnedBerry.posY = 0;
@@ -35,6 +36,7 @@ void updateEntities()
     
     int prevPosX = game.snake.posX;
     int prevPosY = game.snake.posY;
+    int prevDirection = game.snake.direction;
 
     switch (game.snake.direction) {
         case UP:
@@ -57,7 +59,7 @@ void updateEntities()
             break;
     }
 
-    updateNextSegment(snakeHead, prevPosX, prevPosY);
+    updateNextSegment(snakeHead, prevPosX, prevPosY, prevDirection);
 
     if (game.snake.posX + 1 == game.spawnedBerry.posX && game.snake.posY + 1 == game.spawnedBerry.posY)
     {
@@ -66,16 +68,23 @@ void updateEntities()
     }
 }
 
-void updateNextSegment(Entity *segment, int posX, int posY)
+void updateNextSegment(Entity *segment, int posX, int posY, int direction)
 {
     if (segment->nextSegment == NULL) return;
     int prevPosX = segment->nextSegment->posX;
     int prevPosY = segment->nextSegment->posY;
+    int prevDirection = segment->nextSegment->direction;
 
     segment->nextSegment->posX = posX;
     segment->nextSegment->posY = posY;
+    segment->nextSegment->direction = direction;
 
-    updateNextSegment(segment->nextSegment, prevPosX, prevPosY);
+    if (segment->nextSegment->direction == UP || segment->nextSegment->direction == DOWN)
+    {
+        segment->nextSegment->body = '|';
+    } else segment->nextSegment->body = '-';
+
+    updateNextSegment(segment->nextSegment, prevPosX, prevPosY, prevDirection);
 }
 
 Entity* createSegment()
@@ -106,26 +115,37 @@ void linkSegment(Entity** head)
         temp->nextSegment = newSegment;
         newSegment->posX = temp->posX;
         newSegment->posY = temp->posY;
-    }
+        newSegment->direction = temp->direction;
+        
+        if (newSegment->direction == UP || newSegment->direction == DOWN)
+        {
+            newSegment->body = '|';
+        } else newSegment->body = '-';
+    } 
 }
 
-// returns 1 if head, 0 if other segments, -1 if not found
-int findSnakeBody(int row, int col, Entity *head)
+Entity* findSnakeBody(int row, int col, Entity *head)
 {
+    if (head == NULL) return NULL;
+    
     Entity *temp = head;
 
-    if ((head->posX + 1 == col) && (head->posY + 1 == row)) return 1;
-    
-    if (temp->nextSegment == NULL) return 0;
+    // found head
+    if ((head->posX + 1 == col) && (head->posY + 1 == row)) return head;
+
+    if (temp->nextSegment == NULL) return NULL;
 
     temp = temp->nextSegment;
 
     while (temp != NULL)
     {
-        if ((temp->posX + 1 == col) && (temp->posY + 1 == row)) return 0;
+        int snakePosX = temp->posX + 1;
+        int snakePosY = temp->posY + 1;
+
+        if ((snakePosX == col) && (snakePosY == row)) return temp;
         temp = temp->nextSegment;
     }
-    return -1;
+    return NULL;
 }
 
 void freeSnake(Entity *head)

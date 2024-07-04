@@ -39,7 +39,7 @@ void gameRefreshScreen()
 
 void gameDraw(struct abuf *ab)
 {
-    int segment;
+    Entity *segment;
 
     int snakePosX = game.snake.posX + 1;
     int snakePosY = game.snake.posY + 1;
@@ -66,12 +66,12 @@ void gameDraw(struct abuf *ab)
                     int buflen = snprintf(buf, sizeof(buf), "\x1b[%s;%sm@\x1b[m", ANSI_BOLD, ANSI_RED);
                     abAppend(ab, buf, buflen);
                 }
-                else if ((segment = findSnakeBody(row, col, snakeHead)) != -1)
+                else if ((segment = findSnakeBody(row, col, snakeHead)))
                 {
                     char buf[16];
-                    int buflen = (segment == 1) ?
-                        snprintf(buf, sizeof(buf), "\x1b[%s;%sm@\x1b[m", ANSI_BOLD, ANSI_YELLOW) :
-                        snprintf(buf, sizeof(buf), "\x1b[%s;%sm@\x1b[m", ANSI_BOLD, ANSI_GREEN);
+                    int buflen = (segment == snakeHead) ?
+                        snprintf(buf, sizeof(buf), "\x1b[%s;%sm%c\x1b[m", ANSI_BOLD, ANSI_YELLOW, snakeHead->body) :
+                        snprintf(buf, sizeof(buf), "\x1b[%s;%sm%c\x1b[m", ANSI_BOLD, ANSI_GREEN, segment->body);
                     abAppend(ab, buf, buflen);
                 }
                 else abAppend(ab, " ", 1);
@@ -86,9 +86,10 @@ void gameDraw(struct abuf *ab)
     }
 
     char buf[128];
+    int collision = findSnakeBody(snakePosY, snakePosX, snakeHead->nextSegment) ? 1 : 0;
     int buflen = snprintf(
-        buf, sizeof(buf), "GSX: %3d SPX: %3d, GSY: %3d, SPY: %3d, BPX: %3d, BPY: %3d",
-        game.snake.posX, snakePosX, game.snake.posY, snakePosY, game.spawnedBerry.posX, game.spawnedBerry.posY
+        buf, sizeof(buf), "SPX: %3d, SPY: %3d, BPX: %3d, BPY: %3d COLLIDE: \x1b[1;31m%3d\x1b[m", 
+        snakePosX, snakePosY, game.spawnedBerry.posX, game.spawnedBerry.posY, collision
     );
     
     if (buflen > game.screenCols) buflen = game.screenCols;

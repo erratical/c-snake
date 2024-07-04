@@ -12,12 +12,19 @@ enum directions
     NON
 };
 
+enum segmentTypes
+{
+    HEAD = 100,
+    BODY
+};
+
 typedef struct playerEntity
 {
     //int length;
     int posX;
     int posY;
-    int direction; 
+    int direction;
+    char body; 
     struct playerEntity *nextSegment;
 
 } Entity;
@@ -46,8 +53,8 @@ Entity* createSegment();
 void linkSegment(Entity** head);
 void init();
 void updateEntities();
-void updateNextSegment(Entity* segment, int posX, int posY);
-int findSnakeBody(int row, int col, Entity *head);
+void updateNextSegment(Entity* segment, int posX, int posY, int direction);
+Entity* findSnakeBody(int row, int col, Entity *head);
 void freeSnake(Entity* head);
 void generateBerry(int *posX, int *posY);
 int spawnBerry(int posX, int posY);

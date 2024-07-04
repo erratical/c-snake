@@ -20,25 +20,37 @@ void gameProcessKeypress()
             case ARROW_DOWN:
             case 's':
                 if (game.snake.direction != UP ) 
+                {
                     game.snake.direction = DOWN;
+                    game.snake.body = 'v';
+                }
                 break;
 
             case ARROW_UP:
             case 'w':
                 if (game.snake.direction != DOWN) 
+                {
                     game.snake.direction = UP;
+                    game.snake.body = '^';
+                }
                 break;
             
             case ARROW_LEFT:
             case 'a':
                 if (game.snake.direction != RIGHT) 
+                {
                     game.snake.direction = LEFT;
+                    game.snake.body = '<';
+                }
                 break;
             
             case ARROW_RIGHT:
             case 'd':
                 if (game.snake.direction != LEFT) 
+                {
                     game.snake.direction = RIGHT;
+                    game.snake.body = '>';
+                }
                 break;
             
             default:
