@@ -50,7 +50,7 @@ struct gameConfig game;
 Entity *snakeHead;
 
 Entity* createSegment();
-void linkSegment(Entity** head);
+void linkSegment(Entity** head, int posX, int posY);
 void init();
 void updateEntities();
 void updateNextSegment(Entity* segment, int posX, int posY, int direction);

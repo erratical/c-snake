@@ -64,7 +64,12 @@ void updateEntities()
     if (game.snake.posX + 1 == game.spawnedBerry.posX && game.snake.posY + 1 == game.spawnedBerry.posY)
     {
         game.spawnedBerry.exists = 0;
-        linkSegment(&snakeHead);
+        linkSegment(&snakeHead, prevPosX, prevPosY);
+    }
+
+    if (findSnakeBody(game.snake.posY + 1, game.snake.posX + 1, snakeHead->nextSegment))
+    {
+        // game over
     }
 }
 
@@ -94,7 +99,7 @@ Entity* createSegment()
 
     return newSegment;
 }
-void linkSegment(Entity** head)
+void linkSegment(Entity** head, int posX, int posY)
 {
     Entity *newSegment = createSegment();
     
@@ -113,8 +118,8 @@ void linkSegment(Entity** head)
         }
 
         temp->nextSegment = newSegment;
-        newSegment->posX = temp->posX;
-        newSegment->posY = temp->posY;
+        newSegment->posX = posX;
+        newSegment->posY = posY;
         newSegment->direction = temp->direction;
         
         if (newSegment->direction == UP || newSegment->direction == DOWN)
@@ -166,6 +171,8 @@ void generateBerry(int *posX, int *posY)
     int lowerLimit = 1;
     int upperLimitX = game.screenCols - 6;
     int upperLimitY = game.screenRows - 4;
+
+    srand(time(NULL));
 
     int randX = (rand() % (upperLimitX - lowerLimit + 1)) + lowerLimit;
     int randY = (rand() % (upperLimitY - lowerLimit + 1)) + lowerLimit;
