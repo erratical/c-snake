@@ -17,7 +17,7 @@ int main()
   while (1)
     {
       gameRefreshScreen();
-      usleep(75000); // speed
+      usleep(75000); // / 1000 for milliseconds
       gameProcessKeypress();
     }
   

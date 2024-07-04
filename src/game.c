@@ -2,6 +2,7 @@
 #include "../lib/terminal.h"
 #include <stdlib.h>
 #include <time.h> 
+#include <unistd.h>
 
 void init()
 {
@@ -63,6 +64,7 @@ void updateEntities()
 
     if (game.snake.posX + 1 == game.spawnedBerry.posX && game.snake.posY + 1 == game.spawnedBerry.posY)
     {
+        write(STDOUT_FILENO, "\a", 1);
         game.spawnedBerry.exists = 0;
         linkSegment(&snakeHead, prevPosX, prevPosY);
     }
@@ -135,7 +137,6 @@ Entity* findSnakeBody(int row, int col, Entity *head)
     
     Entity *temp = head;
 
-    // found head
     if ((head->posX + 1 == col) && (head->posY + 1 == row)) return head;
 
     if (temp->nextSegment == NULL) return NULL;
@@ -156,14 +157,14 @@ Entity* findSnakeBody(int row, int col, Entity *head)
 void freeSnake(Entity *head)
 {
     Entity *temp;
-    Entity *current = head->nextSegment;  // Start from the second segment
+    Entity *current = head->nextSegment;
     while (current != NULL)
     {
         temp = current;
         current = current->nextSegment;
         free(temp);
     }
-    head->nextSegment = NULL;  // Set the next pointer of the first segment to NULL
+    head->nextSegment = NULL;
 }
 
 void generateBerry(int *posX, int *posY)
@@ -187,6 +188,5 @@ int spawnBerry(int row, int col)
     {
         return 1;
     }
-
     return 0;
 }

@@ -14,7 +14,6 @@ void enterRawMode()
 
     atexit(exitRawMode);
 
-    // Initialize termios variable
     struct termios raw = game.terminalSettings;
 
     raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
