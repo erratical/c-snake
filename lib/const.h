@@ -1,7 +1,7 @@
 #ifndef CONST_H
 #define CONST_H
 
-#define AUTHOR "John Michael C. Magpantay"
+#define AUTHOR "John Michael Magpantay"
 #define DSTART "Tuesday, 2 July 2024"
 #define TITLE "C-Snake"
 #define DFIN " "
