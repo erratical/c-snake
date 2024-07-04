@@ -43,6 +43,8 @@ struct gameConfig
     int screenCols;
     Entity snake;
     Berry spawnedBerry;
+    int menuOption;
+    int hoverOption;
     struct termios terminalSettings; 
 };
 

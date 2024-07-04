@@ -14,4 +14,10 @@
 #define ANSI_RED "31"
 #define ANSI_YELLOW "33"
 
+#define MENU 0
+#define PLAY 200
+#define LEADERBOARDS 201
+#define SETTINGS 202
+#define EXIT 203
+
 #endif

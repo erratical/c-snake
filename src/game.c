@@ -1,5 +1,6 @@
 #include "../lib/game.h"
 #include "../lib/terminal.h"
+#include "../lib/const.h"
 #include <stdlib.h>
 #include <time.h> 
 #include <unistd.h>
@@ -15,14 +16,10 @@ void init()
     game.spawnedBerry.exists = 0;
     game.spawnedBerry.posX = 0;
     game.spawnedBerry.posY = 0;
+    game.menuOption = MENU;
+    game.hoverOption = PLAY;
 
     if (getWindowSize(&game.screenRows, &game.screenCols) == -1) die("getWindowSize");
-
-    //for (int i = 0; i < 5; i++)
-    //{
-    //    linkSegment(&snakeHead);
-    //}
-
 }
 
 void updateEntities()
@@ -71,7 +68,8 @@ void updateEntities()
 
     if (findSnakeBody(game.snake.posY + 1, game.snake.posX + 1, snakeHead->nextSegment))
     {
-        // game over
+        write(STDOUT_FILENO, "\a", 1);
+        game.menuOption = MENU;
     }
 }
 

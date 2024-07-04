@@ -10,5 +10,6 @@ enum gameControls
 };
 
 void gameProcessKeypress();
+void mainMenuSelection();
 
 #endif

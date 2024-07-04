@@ -10,7 +10,6 @@ void gameProcessKeypress()
 
         switch (c)
         {
-            // Exit Key 'Ctrl + Q'
             case CTRL_KEY('q'):
                 freeSnake(snakeHead);
                 system("clear");
@@ -54,6 +53,37 @@ void gameProcessKeypress()
                 break;
             
             default:
+                break;
+        }
+}
+
+void mainMenuSelection()
+{
+    int c = gameReadKey();
+
+    switch (c)
+        {
+            case CTRL_KEY('q'):
+                freeSnake(snakeHead);
+                system("clear");
+                exit(0);
+                break;
+            
+            // select hover
+            case '\r':
+                game.menuOption = game.hoverOption;
+                break;
+            
+            case ARROW_UP:
+            case 'w':
+            if (game.hoverOption > PLAY)
+                game.hoverOption--;
+                break;
+
+            case ARROW_DOWN:
+            case 's':
+            if (game.hoverOption < EXIT)
+                game.hoverOption++;
                 break;
         }
 }
