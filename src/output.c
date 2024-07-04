@@ -39,6 +39,8 @@ void gameRefreshScreen()
 
 void gameDraw(struct abuf *ab)
 {
+    int segment;
+
     int snakePosX = game.snake.posX + 1;
     int snakePosY = game.snake.posY + 1;
 
@@ -60,11 +62,17 @@ void gameDraw(struct abuf *ab)
             {
                 if (spawnBerry(row, col))
                 {
-                    abAppend(ab, "\x1b[1;31m@\x1b[m", 11);
+                    char buf[16];
+                    int buflen = snprintf(buf, sizeof(buf), "\x1b[%s;%sm@\x1b[m", ANSI_BOLD, ANSI_RED);
+                    abAppend(ab, buf, buflen);
                 }
-                else if (findSnakeBody(row, col, snakeHead))
+                else if ((segment = findSnakeBody(row, col, snakeHead)) != -1)
                 {
-                    abAppend(ab, "\x1b[1;32m@\x1b[m", 11);
+                    char buf[16];
+                    int buflen = (segment == 1) ?
+                        snprintf(buf, sizeof(buf), "\x1b[%s;%sm@\x1b[m", ANSI_BOLD, ANSI_YELLOW) :
+                        snprintf(buf, sizeof(buf), "\x1b[%s;%sm@\x1b[m", ANSI_BOLD, ANSI_GREEN);
+                    abAppend(ab, buf, buflen);
                 }
                 else abAppend(ab, " ", 1);
             }

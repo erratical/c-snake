@@ -109,15 +109,23 @@ void linkSegment(Entity** head)
     }
 }
 
+// returns 1 if head, 0 if other segments, -1 if not found
 int findSnakeBody(int row, int col, Entity *head)
 {
     Entity *temp = head;
+
+    if ((head->posX + 1 == col) && (head->posY + 1 == row)) return 1;
+    
+    if (temp->nextSegment == NULL) return 0;
+
+    temp = temp->nextSegment;
+
     while (temp != NULL)
     {
-        if ((temp->posX + 1 == col) && (temp->posY + 1 == row)) return 1;
+        if ((temp->posX + 1 == col) && (temp->posY + 1 == row)) return 0;
         temp = temp->nextSegment;
     }
-    return 0;
+    return -1;
 }
 
 void freeSnake(Entity *head)
