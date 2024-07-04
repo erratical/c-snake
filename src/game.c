@@ -1,6 +1,7 @@
 #include "../lib/game.h"
 #include "../lib/terminal.h"
 #include <stdlib.h>
+#include <time.h> 
 
 void init()
 {
@@ -9,6 +10,9 @@ void init()
     game.snake.posX = 10;
     game.snake.posY = 0;
     game.snake.direction = NON;
+    game.spawnedBerry.exists = 0;
+    game.spawnedBerry.posX = 0;
+    game.spawnedBerry.posY = 0;
 
     if (getWindowSize(&game.screenRows, &game.screenCols) == -1) die("getWindowSize");
 
@@ -19,9 +23,16 @@ void init()
 
 }
 
-void updateEntity()
+void updateEntities()
 {
 
+    if (!game.spawnedBerry.exists) 
+    {
+        generateBerry(&game.spawnedBerry.posX, &game.spawnedBerry.posY);
+        game.spawnedBerry.exists = 1;
+    }
+        
+    
     int prevPosX = game.snake.posX;
     int prevPosY = game.snake.posY;
 
@@ -47,9 +58,14 @@ void updateEntity()
     }
 
     updateNextSegment(snakeHead, prevPosX, prevPosY);
+
+    if (game.snake.posX + 1 == game.spawnedBerry.posX && game.snake.posY + 1 == game.spawnedBerry.posY)
+    {
+        game.spawnedBerry.exists = 0;
+    }
 }
 
-void updateNextSegment(entity *segment, int posX, int posY)
+void updateNextSegment(Entity *segment, int posX, int posY)
 {
     if (segment->nextSegment == NULL) return;
     int prevPosX = segment->nextSegment->posX;
@@ -61,18 +77,18 @@ void updateNextSegment(entity *segment, int posX, int posY)
     updateNextSegment(segment->nextSegment, prevPosX, prevPosY);
 }
 
-entity* createSegment(int posX, int posY)
+Entity* createSegment(int posX, int posY)
 {
-    entity *newSegment = (entity*) malloc(sizeof(entity));
+    Entity *newSegment = (Entity*) malloc(sizeof(Entity));
     newSegment->posX = posX;
     newSegment->posY = posY;
     newSegment->nextSegment = NULL;
 
     return newSegment;
 }
-void linkSegment(entity** head, int posX, int posY)
+void linkSegment(Entity** head, int posX, int posY)
 {
-    entity *newSegment = createSegment(posX, posY);
+    Entity *newSegment = createSegment(posX, posY);
     
     if (*head == NULL)
     {
@@ -80,7 +96,7 @@ void linkSegment(entity** head, int posX, int posY)
     }
     else 
     {
-        entity *temp = *head;
+        Entity *temp = *head;
         while (temp->nextSegment != NULL)
         {
             temp = temp->nextSegment;
@@ -90,9 +106,9 @@ void linkSegment(entity** head, int posX, int posY)
     }
 }
 
-int findSnakeBody(int row, int col, entity *head)
+int findSnakeBody(int row, int col, Entity *head)
 {
-    entity *temp = head;
+    Entity *temp = head;
     while (temp != NULL)
     {
         if ((temp->posX + 1 == col) && (temp->posY + 1 == row)) return 1;
@@ -101,10 +117,10 @@ int findSnakeBody(int row, int col, entity *head)
     return 0;
 }
 
-void freeSnake(entity *head)
+void freeSnake(Entity *head)
 {
-    entity *temp;
-    entity *current = head->nextSegment;  // Start from the second segment
+    Entity *temp;
+    Entity *current = head->nextSegment;  // Start from the second segment
     while (current != NULL)
     {
         temp = current;
@@ -112,4 +128,27 @@ void freeSnake(entity *head)
         free(temp);
     }
     head->nextSegment = NULL;  // Set the next pointer of the first segment to NULL
+}
+
+void generateBerry(int *posX, int *posY)
+{
+    int lowerLimit = 0;
+    int upperLimitX = game.screenCols - 6;
+    int upperLimitY = game.screenRows - 4;
+
+    int randX = (rand() % (upperLimitX - lowerLimit + 1)) + lowerLimit;
+    int randY = (rand() % (upperLimitY - lowerLimit + 1)) + lowerLimit;
+
+    *posX = (randX % 2 == 0) ? randX + 1 : randX;
+    *posY = randY;
+}
+
+int spawnBerry(int row, int col)
+{
+    if (col == game.spawnedBerry.posX && row == game.spawnedBerry.posY)
+    {
+        return 1;
+    }
+
+    return 0;
 }

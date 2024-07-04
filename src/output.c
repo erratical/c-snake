@@ -19,7 +19,7 @@ void gameRefreshScreen()
     // Move cursor to top left
     abAppend(&ab, "\x1b[H", 3);
 
-    updateEntity();
+    updateEntities();
     gameDraw(&ab);
     
 
@@ -58,7 +58,11 @@ void gameDraw(struct abuf *ab)
 
             for (int col = 0; col < game.screenCols-3; col++) 
             {
-                if (findSnakeBody(row, col, snakeHead))
+                if (spawnBerry(row, col))
+                {
+                    abAppend(ab, "\x1b[1;31m@\x1b[m", 11);
+                }
+                else if (findSnakeBody(row, col, snakeHead))
                 {
                     abAppend(ab, "@", 1);
                 }
@@ -75,8 +79,8 @@ void gameDraw(struct abuf *ab)
 
     char buf[128];
     int buflen = snprintf(
-        buf, sizeof(buf), "GSX: %3d SPX: %3d, GSY: %3d, SPY: %3d, COLS: %3d, ROWS: %3d",
-        game.snake.posX, snakePosX, game.snake.posY, snakePosY, game.screenCols, game.screenRows
+        buf, sizeof(buf), "GSX: %3d SPX: %3d, GSY: %3d, SPY: %3d, BPX: %3d, BPY: %3d",
+        game.snake.posX, snakePosX, game.snake.posY, snakePosY, game.spawnedBerry.posX, game.spawnedBerry.posY
     );
     
     abAppend(ab, buf, buflen);
