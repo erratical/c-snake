@@ -96,7 +96,7 @@ void mainMenuRefreshScreen()
 
 void drawMainMenu(struct abuf *ab)
 {
-    for (int row = 0; row < game.screenRows - 1; row++)
+    for (int row = 0; row < game.screenRows; row++)
     {
         abAppend(ab, "\x1b[1m", 4);
         if (row == game.screenRows / 3) displayCenteredText("Snake Game", ab);

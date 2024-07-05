@@ -35,6 +35,7 @@ void die(const char *str)
 {
     system("clear");
     perror(str);
+    exitRawMode();
     exit(1);
 }
 

@@ -15,8 +15,6 @@ int main()
   enterRawMode();
   init();
 
-  
-
   while (1)
   {
     if (game.menuOption == MENU)
@@ -27,6 +25,7 @@ int main()
 
     else if (game.menuOption == PLAY)
     {
+      // add a way to init game?
       gameRefreshScreen();
       usleep(75000); // / 1000 for milliseconds
       gameProcessKeypress();
@@ -41,9 +40,11 @@ int main()
     }
     else if (game.menuOption == EXIT)
     {
+      system("clear");
       break;
     }
   }
 
   freeSnake(snakeHead);
+  exitRawMode();
 }

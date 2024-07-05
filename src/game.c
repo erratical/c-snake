@@ -69,7 +69,17 @@ void updateEntities()
     if (findSnakeBody(game.snake.posY + 1, game.snake.posX + 1, snakeHead->nextSegment))
     {
         write(STDOUT_FILENO, "\a", 1);
+        // abrupt context switch without freeing `ab`?
         game.menuOption = MENU;
+        freeSnake(snakeHead);
+        game.snake.nextSegment = NULL;
+        game.snake.posX = 10;
+        game.snake.posY = 0;
+        game.snake.direction = NON;
+
+        game.spawnedBerry.exists = 0;
+        game.spawnedBerry.posX = 0;
+        game.spawnedBerry.posY = 0;
     }
 }
 
