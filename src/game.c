@@ -8,18 +8,26 @@
 void init()
 {
     snakeHead = &game.snake;
-    game.snake.nextSegment = NULL;
-    game.snake.posX = 10;
-    game.snake.posY = 0;
-    game.snake.direction = NON;
-    game.snake.body = '@';
-    game.spawnedBerry.exists = 0;
-    game.spawnedBerry.posX = 0;
-    game.spawnedBerry.posY = 0;
+
+    refreshGame();
+
     game.menuOption = MENU;
     game.hoverOption = PLAY;
 
     if (getWindowSize(&game.screenRows, &game.screenCols) == -1) die("getWindowSize");
+}
+
+void refreshGame()
+{
+    game.snake.nextSegment = NULL;
+    game.snake.posX = 10;
+    game.snake.posY = 0;
+    game.snake.direction = NON;
+    game.snake.body = '&';
+
+    game.spawnedBerry.exists = 0;
+    game.spawnedBerry.posX = 0;
+    game.spawnedBerry.posY = 0;
 }
 
 void updateEntities()
@@ -72,14 +80,7 @@ void updateEntities()
         // abrupt context switch without freeing `ab`?
         game.menuOption = MENU;
         freeSnake(snakeHead);
-        game.snake.nextSegment = NULL;
-        game.snake.posX = 10;
-        game.snake.posY = 0;
-        game.snake.direction = NON;
-
-        game.spawnedBerry.exists = 0;
-        game.spawnedBerry.posX = 0;
-        game.spawnedBerry.posY = 0;
+        refreshGame();
     }
 }
 

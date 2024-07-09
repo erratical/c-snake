@@ -53,6 +53,7 @@ Entity *snakeHead;
 
 Entity* createSegment();
 void linkSegment(Entity** head, int posX, int posY);
+void refreshGame();
 void init();
 void updateEntities();
 void updateNextSegment(Entity* segment, int posX, int posY, int direction);
