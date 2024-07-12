@@ -26,9 +26,6 @@ void gameDraw(struct abuf *ab)
 {
     Entity *segment;
 
-    int snakePosX = game.snake.posX + 1;
-    int snakePosY = game.snake.posY + 1;
-
     for (int row = 0; row < game.screenRows - 1; row++)
     {
         if (row == 0 || row == game.screenRows - 2)
@@ -69,10 +66,9 @@ void gameDraw(struct abuf *ab)
     }
 
     char buf[128];
-    int collision = findSnakeBody(snakePosY, snakePosX, snakeHead->nextSegment) ? 1 : 0;
     int buflen = snprintf(
-        buf, sizeof(buf), "SPX: %3d, SPY: %3d, BPX: %3d, BPY: %3d COLLIDE: \x1b[1;31m%3d\x1b[m", 
-        snakePosX, snakePosY, game.spawnedBerry.posX, game.spawnedBerry.posY, collision
+        buf, sizeof(buf), "\x1b[1mSCORE: %3d\x1b[m", 
+        game.score
     );
     
     if (buflen > game.screenCols) buflen = game.screenCols;

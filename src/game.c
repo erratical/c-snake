@@ -28,6 +28,8 @@ void refreshGame()
     game.spawnedBerry.exists = 0;
     game.spawnedBerry.posX = 0;
     game.spawnedBerry.posY = 0;
+
+    game.score = 0;
 }
 
 void updateEntities()
@@ -46,19 +48,35 @@ void updateEntities()
 
     switch (game.snake.direction) {
         case UP:
-            if (game.snake.posY <= 0) break;
+            if (game.snake.posY <= 0) 
+            {
+                gameOver();
+                break;
+            }
             game.snake.posY--;
             break;
         case DOWN:
-            if (game.snake.posY >= game.screenRows - 4) break;
+            if (game.snake.posY >= game.screenRows - 4) 
+            {
+                gameOver();
+                break;
+            }
             game.snake.posY++;
             break;
         case LEFT:
-            if (game.snake.posX <= 0) break;
+            if (game.snake.posX <= 0) 
+            {
+                gameOver();
+                break;
+            }
             game.snake.posX -= 2;
             break;
         case RIGHT:
-            if (game.snake.posX >= game.screenCols - 6) break;
+            if (game.snake.posX >= game.screenCols - 6) 
+            {
+                gameOver();
+                break;
+            }
             game.snake.posX += 2;
             break;
         case NON:
@@ -69,19 +87,24 @@ void updateEntities()
 
     if (game.snake.posX + 1 == game.spawnedBerry.posX && game.snake.posY + 1 == game.spawnedBerry.posY)
     {
+        game.score++;
+
         write(STDOUT_FILENO, "\a", 1);
         game.spawnedBerry.exists = 0;
         linkSegment(&snakeHead, prevPosX, prevPosY);
     }
 
     if (findSnakeBody(game.snake.posY + 1, game.snake.posX + 1, snakeHead->nextSegment))
-    {
-        write(STDOUT_FILENO, "\a", 1);
-        // abrupt context switch without freeing `ab`?
-        game.menuOption = MENU;
-        freeSnake(snakeHead);
-        refreshGame();
-    }
+        gameOver();
+    
+}
+
+void gameOver()
+{
+    write(STDOUT_FILENO, "\a", 1);
+    game.menuOption = MENU;
+    freeSnake(snakeHead);
+    refreshGame();
 }
 
 void updateNextSegment(Entity *segment, int posX, int posY, int direction)

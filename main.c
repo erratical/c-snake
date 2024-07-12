@@ -27,7 +27,7 @@ int main()
     {
       // add a way to init game?
       gameRefreshScreen();
-      usleep(75000); // / 1000 for milliseconds
+      usleep(65000); // / 1000 for milliseconds
       gameProcessKeypress();
     }
     else if (game.menuOption == LEADERBOARDS)

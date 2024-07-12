@@ -43,6 +43,7 @@ struct gameConfig
     int screenCols;
     Entity snake;
     Berry spawnedBerry;
+    int score;
     int menuOption;
     int hoverOption;
     struct termios terminalSettings; 
@@ -61,5 +62,6 @@ Entity* findSnakeBody(int row, int col, Entity *head);
 void freeSnake(Entity* head);
 void generateBerry(int *posX, int *posY);
 int spawnBerry(int posX, int posY);
+void gameOver();
 
 #endif
