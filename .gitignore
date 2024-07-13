@@ -5,3 +5,5 @@ snake
 /_obj
 
 /__changelog
+
+.DS_Store
