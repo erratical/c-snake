@@ -30,6 +30,11 @@ int main()
       usleep(65000); // / 1000 for milliseconds
       gameProcessKeypress();
     }
+    else if (game.menuOption == GAME_OVER)
+    {
+      gameOverRefreshScreen();
+      inputUsername();
+    }
     else if (game.menuOption == LEADERBOARDS)
     {
       //TODO
@@ -45,6 +50,6 @@ int main()
     }
   }
 
-  freeSnake(snakeHead);
+  freePointers(snakeHead);
   exitRawMode();
 }

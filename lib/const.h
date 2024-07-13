@@ -15,6 +15,7 @@
 #define ANSI_YELLOW "33"
 
 #define MENU 0
+#define GAME_OVER 1
 #define PLAY 200
 #define LEADERBOARDS 201
 #define SETTINGS 202

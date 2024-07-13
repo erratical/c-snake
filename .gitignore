@@ -3,3 +3,5 @@ Makefile
 snake
 
 /_obj
+
+/__changelog

@@ -13,6 +13,7 @@ void init()
 
     game.menuOption = MENU;
     game.hoverOption = PLAY;
+    game.username = NULL;
 
     if (getWindowSize(&game.screenRows, &game.screenCols) == -1) die("getWindowSize");
 }
@@ -102,8 +103,8 @@ void updateEntities()
 void gameOver()
 {
     write(STDOUT_FILENO, "\a", 1);
-    game.menuOption = MENU;
-    freeSnake(snakeHead);
+    game.menuOption = GAME_OVER;
+    freePointers(snakeHead);
     refreshGame();
 }
 
@@ -186,7 +187,7 @@ Entity* findSnakeBody(int row, int col, Entity *head)
     return NULL;
 }
 
-void freeSnake(Entity *head)
+void freePointers(Entity *head)
 {
     Entity *temp;
     Entity *current = head->nextSegment;
@@ -197,6 +198,8 @@ void freeSnake(Entity *head)
         free(temp);
     }
     head->nextSegment = NULL;
+
+    free(game.username);
 }
 
 void generateBerry(int *posX, int *posY)

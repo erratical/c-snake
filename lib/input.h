@@ -3,13 +3,20 @@
 
 enum gameControls
 {
-    ARROW_UP = 1000,
-    ARROW_DOWN,
-    ARROW_LEFT,
-    ARROW_RIGHT,
+    BACKSPACE = 127,
+  ARROW_LEFT = 1000,
+  ARROW_RIGHT,
+  ARROW_UP,
+  ARROW_DOWN,
+  DEL_KEY,
+  END_KEY,
+  HOME_KEY,
+  PAGE_UP,
+  PAGE_DOWN
 };
 
 void gameProcessKeypress();
 void mainMenuSelection();
+void inputUsername();
 
 #endif

@@ -3,6 +3,8 @@
 #include "../lib/terminal.h"
 #include "../lib/game.h"
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 void gameProcessKeypress()
 {
@@ -11,7 +13,7 @@ void gameProcessKeypress()
         switch (c)
         {
             case CTRL_KEY('q'):
-                freeSnake(snakeHead);
+                freePointers(snakeHead);
                 system("clear");
                 exit(0);
                 break;
@@ -64,7 +66,7 @@ void mainMenuSelection()
     switch (c)
         {
             case CTRL_KEY('q'):
-                freeSnake(snakeHead);
+                freePointers(snakeHead);
                 system("clear");
                 exit(0);
                 break;
@@ -86,4 +88,57 @@ void mainMenuSelection()
                 game.hoverOption++;
                 break;
         }
+}
+
+void inputUsername()
+{
+    size_t bufsize = 16;
+    char *buf = malloc(bufsize);
+    size_t buflen = 0;
+
+    buf[0] = '\0';
+
+    if (game.username) 
+    {
+        buf = strdup(game.username);
+        buflen = strlen(game.username);
+    }
+
+    int c = gameReadKey();
+
+    // Allow for backspacing
+    if ( c == DEL_KEY || c == CTRL_KEY('h') || c == BACKSPACE)
+    {
+        if (buflen != 0) buf[--buflen] = '\0';
+    }
+    // Ctrl-Q, cancel username
+    else if (c == CTRL_KEY('q'))
+    {
+        game.username = NULL;
+        game.menuOption = MENU;
+        free(buf);
+        return;
+    }
+    // Enter Key, save as file name
+    else if (c == '\r')
+    {
+        if (buflen != 0)
+        {
+            game.username = strdup(buf);
+            game.menuOption = MENU;
+            free(buf);
+            return;
+        }
+    }
+    // Normal character keys
+    else if (!iscntrl(c) && c < 128)
+    {
+        if (buflen < 8)
+        {
+            buf[buflen++] = c;
+            buf[buflen] = '\0';
+        }
+    }
+
+    game.username = strdup(buf);
 }

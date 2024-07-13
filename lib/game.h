@@ -5,7 +5,7 @@
 
 enum directions  
 {
-    UP = 1000,
+    UP = 900,
     DOWN,
     LEFT,
     RIGHT,
@@ -46,6 +46,7 @@ struct gameConfig
     int score;
     int menuOption;
     int hoverOption;
+    char *username;
     struct termios terminalSettings; 
 };
 
@@ -59,7 +60,7 @@ void init();
 void updateEntities();
 void updateNextSegment(Entity* segment, int posX, int posY, int direction);
 Entity* findSnakeBody(int row, int col, Entity *head);
-void freeSnake(Entity* head);
+void freePointers(Entity* head);
 void generateBerry(int *posX, int *posY);
 int spawnBerry(int posX, int posY);
 void gameOver();

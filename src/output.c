@@ -92,7 +92,7 @@ void mainMenuRefreshScreen()
 
 void drawMainMenu(struct abuf *ab)
 {
-    for (int row = 0; row < game.screenRows; row++)
+    for (int row = 0; row < game.screenRows - 1; row++)
     {
         abAppend(ab, "\x1b[1m", 4);
         if (row == game.screenRows / 3) displayCenteredText("Snake Game", ab);
@@ -139,6 +139,85 @@ void drawMainMenu(struct abuf *ab)
 
         if (row < game.screenRows - 1) abAppend(ab, "\r\n", 2);
     }
+
+    char buf[128];
+    int buflen = snprintf(
+        buf, sizeof(buf), "\x1b[1mNAME: %s\x1b[m", 
+        game.username ? game.username : ""
+    );
+    
+    if (buflen > game.screenCols) buflen = game.screenCols;
+    abAppend(ab, buf, buflen);
+    abAppend(ab, "\x1b[K", 3);
+    
+}
+
+void gameOverRefreshScreen()
+{
+    struct abuf ab = ABUF_INIT;
+
+    abAppend(&ab, "\x1b[?25l", 6);
+
+    abAppend(&ab, "\x1b[H", 3);
+
+    drawGameOverScreen(&ab);
+
+    write(STDOUT_FILENO, ab.b, ab.len);
+    abFree(&ab);
+}
+
+void drawGameOverScreen(struct abuf *ab)
+{
+    char username[] = "_ _ _ _ _ _ _ _";
+
+    if (game.username)
+    {
+        int j = 0;
+        for (unsigned long i = 0; i < strlen(game.username); i++)
+        {
+            username[j] = game.username[i];
+            j += 2;
+        }
+    }
+
+    for (int row = 0; row < game.screenRows - 1; row++)
+    {
+        if (row == (game.screenRows / 2) - 4)
+        {
+            abAppend(ab, "\x1b[1;31m", 7);
+            displayCenteredText("GAME OVER", ab);
+            abAppend(ab, "\x1b[m", 3);
+        }
+
+        if (row == ((game.screenRows / 2) - 2))
+        {
+            abAppend(ab, "\x1b[1m", 4);
+            displayCenteredText("Enter Name", ab);
+            abAppend(ab, "\x1b[m", 3);
+        }
+
+        if (row == ((game.screenRows / 2) - 1))
+        {
+            abAppend(ab, "\x1b[1m", 4);
+            displayCenteredText(username, ab);
+            abAppend(ab, "\x1b[m", 3);
+        }
+
+        abAppend(ab, "\x1b[K", 3); 
+
+        if (row < game.screenRows - 1) abAppend(ab, "\r\n", 2);
+    }
+
+    char buf[128];
+    int buflen = snprintf(
+        buf, sizeof(buf), "\x1b[1mNAME: %s\x1b[m", 
+        game.username ? game.username : ""
+    );
+    
+    if (buflen > game.screenCols) buflen = game.screenCols;
+    abAppend(ab, buf, buflen);
+    abAppend(ab, "\x1b[K", 3);
+
 }
 
 void displayCenteredText(const char* s, struct abuf *ab)
