@@ -273,6 +273,8 @@ void saveLeaderboard()
     {
         fprintf(fileHandle, "%s\n", game.leaderboard[i].username);
         fprintf(fileHandle, "%d\n", game.leaderboard[i].score);
+
+        free(game.leaderboard[i].username);
     }
 
     fclose(fileHandle);
