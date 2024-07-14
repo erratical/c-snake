@@ -74,6 +74,7 @@ void mainMenuSelection()
             // select hover
             case '\r':
                 game.menuOption = game.hoverOption;
+                if (game.hoverOption == PLAY) refreshGame();
                 break;
             
             case ARROW_UP:
@@ -126,6 +127,7 @@ void inputUsername()
         {
             game.username = strdup(buf);
             game.menuOption = MENU;
+            updateLeaderboard();
             free(buf);
             return;
         }

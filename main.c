@@ -14,7 +14,8 @@ int main()
 {
   enterRawMode();
   init();
-
+  loadLeaderboard();
+  
   while (1)
   {
     if (game.menuOption == MENU)
@@ -45,6 +46,7 @@ int main()
     }
     else if (game.menuOption == EXIT)
     {
+      saveLeaderboard();
       system("clear");
       break;
     }

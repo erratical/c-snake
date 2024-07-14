@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <time.h> 
 #include <unistd.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <string.h>
 
 void init()
 {
@@ -14,6 +18,7 @@ void init()
     game.menuOption = MENU;
     game.hoverOption = PLAY;
     game.username = NULL;
+    game.entryCount = 0;
 
     if (getWindowSize(&game.screenRows, &game.screenCols) == -1) die("getWindowSize");
 }
@@ -105,7 +110,6 @@ void gameOver()
     write(STDOUT_FILENO, "\a", 1);
     game.menuOption = GAME_OVER;
     freePointers(snakeHead);
-    refreshGame();
 }
 
 void updateNextSegment(Entity *segment, int posX, int posY, int direction)
@@ -224,4 +228,109 @@ int spawnBerry(int row, int col)
         return 1;
     }
     return 0;
+}
+
+void loadLeaderboard()
+{
+    char buf[9];
+
+    FILE *fileHandle = fopen("_data/leaderboard.txt", "r");
+
+    if (!fileHandle) return;
+
+    // assuming sorted 
+    fscanf(fileHandle, "%d", &game.entryCount);
+
+    for (int i = 0; i < game.entryCount; i++)
+    {
+        fscanf(fileHandle, "%s", buf);
+        game.leaderboard[i].username = strdup(buf);
+        fscanf(fileHandle, "%d", &game.leaderboard[i].score);
+    }
+
+    fclose(fileHandle);
+}
+
+void saveLeaderboard()
+{
+    char *dir = "_data";
+    char *fpath = "_data/leaderboard.txt";
+    struct stat st;
+
+    if (stat(dir, &st) == -1) mkdir(dir, 0777);
+
+    FILE *fileHandle = fopen(fpath, "w");
+
+    if (!fileHandle) 
+    {
+        perror("Could not open save file.");
+        exit(1);
+    }
+
+    fprintf(fileHandle, "%d\n", game.entryCount);
+
+    for (int i = 0; i < game.entryCount; i++)
+    {
+        fprintf(fileHandle, "%s\n", game.leaderboard[i].username);
+        fprintf(fileHandle, "%d\n", game.leaderboard[i].score);
+    }
+
+    fclose(fileHandle);
+}
+
+void updateLeaderboard()
+{
+    int count = game.entryCount;
+    char *username = strdup(game.username);
+    int score = game.score;
+    int insertAt;
+    int i;
+
+    if (count < 10)
+    {
+        insertAt = count;
+
+        for (i = 0; i < count; i++)
+        {
+            if (score > game.leaderboard[i].score) 
+            {
+                insertAt = i;
+                break;
+            }
+        }
+            
+        for (int j = count - 1; j < i; j--)
+            game.leaderboard[j] = game.leaderboard[j-1];
+        
+        game.leaderboard[insertAt].score = score;
+        game.leaderboard[insertAt].username = username;
+        game.entryCount++;
+    }
+    else
+    {
+        insertAt = -1;
+
+        for (i = 0; i < count; i++)
+        {
+            if (score > game.leaderboard[i].score) 
+            {
+                insertAt = i;
+                break;
+            }
+        }
+
+        if (insertAt >= 0)
+        {
+            for (int j = count - 1; j < i; j--)
+                game.leaderboard[j] = game.leaderboard[j-1];
+            
+            game.leaderboard[insertAt].score = score;
+            game.leaderboard[insertAt].username = username;
+        }
+        free(username);
+    }
+
+    free(game.username);
+    game.username = NULL;
+    game.score = 0;
 }

@@ -142,8 +142,8 @@ void drawMainMenu(struct abuf *ab)
 
     char buf[128];
     int buflen = snprintf(
-        buf, sizeof(buf), "\x1b[1mNAME: %s\x1b[m", 
-        game.username ? game.username : ""
+        buf, sizeof(buf), "\x1b[1mEntryCounts: %d NAME: %s\x1b[m", 
+        game.entryCount, game.username ? game.username : ""
     );
     
     if (buflen > game.screenCols) buflen = game.screenCols;

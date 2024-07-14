@@ -36,6 +36,12 @@ typedef struct berryObject
     int posY;
 } Berry;
 
+typedef struct leaderboardEntries
+{
+    char *username;
+    int score;
+} Entry;
+
 
 struct gameConfig
 {
@@ -47,12 +53,17 @@ struct gameConfig
     int menuOption;
     int hoverOption;
     char *username;
+    Entry leaderboard[10];
+    int entryCount;
     struct termios terminalSettings; 
 };
 
 struct gameConfig game;
 Entity *snakeHead;
 
+void loadLeaderboard();
+void saveLeaderboard();
+void updateLeaderboard();
 Entity* createSegment();
 void linkSegment(Entity** head, int posX, int posY);
 void refreshGame();
